@@ -1,6 +1,8 @@
 // import sqliteHelper from "./helper/sqlite3_helper.mjs";
 
+import calculateInstance from "./controller/calculate.mjs";
 import similarityInstance from "./controller/similiarity.mjs";
+import solusiInstance from "./controller/solusi.mjs";
 import getDataDBInstance from "./data/get_data_db.mjs";
 
 
@@ -44,11 +46,37 @@ import getDataDBInstance from "./data/get_data_db.mjs";
 
 
 // console.log(b);
-// let kasus = ['G01', 'G03','G11', 'G15'];
-// let data = await similarityInstance.getKemiripanGejala({
+let kasus = ['G01','G11', 'G15', 'G02'];
+let result = await calculateInstance.similiarityCalculate({kodeKasus: kasus});
+console.log(result);
+// console.log(Object.values(kasus));
+// let listSolusi = await solusiInstance.getAll();
+// // console.log(listSolusi);
+// let dataKemiripan = await similarityInstance.getKemiripanGejala({
 //     requestKodeGejala: kasus
 // })
+// console.log(dataKemiripan)
+// for (let i = 0; i < listSolusi.length; i++) {
+//     let result = calculateInstance.calculateWeightedAverage({
+//         scores: dataKemiripan[i].sBobot,
+//         weights: listSolusi[i].BOBOT_PENYAKIT.split(', '),
+//         factors: listSolusi[i].BOBOT_PENYAKIT.split(', ')
+//     })
+//     console.log(result * 100);
+// }
+
+// let result = calculateInstance.calculateWeightedAverage({
+//     scores: dataKemiripan[3].sBobot,
+//     weights: listSolusi[3].BOBOT_PENYAKIT.split(', '),
+//     factors: listSolusi[3].BOBOT_PENYAKIT.split(', ')
+// })
+// console.log(result * 100);
+
+// console.log(dataKemiripan);
+
+// let data = await getDataDBInstance.getBobotGejala('G01', 'G04');
 // console.log(data);
 
-let data = await getDataDBInstance.getBobotGejala('G01', 'G04');
-console.log(data);
+// console.log(listSolusi[0].KODE_GEJALA.split(', '));
+
+// let cal = calculateInstance.calculateTotal()

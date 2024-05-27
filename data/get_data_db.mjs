@@ -4,6 +4,7 @@ class GetDataDB {
     async getKodeGejala(){
         let listDataKodeGejala = [];
         let listBobotGejala = [];
+        let kodeSolusi = [];
         let db = await sqliteHelper.getData({
             column: [
                 'KODE_SOLUSI', 
@@ -19,9 +20,13 @@ class GetDataDB {
 
         for (let i = 0; i < db.length; i++) {
             listDataKodeGejala.push(db[i].KODE_GEJALA.split(', '));
+            kodeSolusi.push(db[i].KODE_SOLUSI);
         }
 
-        return listDataKodeGejala;
+        return {
+            listDataKodeGejala: listDataKodeGejala,
+            listKodeSolusi: kodeSolusi
+        };
     }
 
     filterHelper(list, ...kode){
