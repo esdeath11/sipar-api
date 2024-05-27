@@ -60,8 +60,8 @@ app.post('/v1/calculate/similiarity', async (req, res) => {
         data
     } = req.body;
     try {
-        let result = calculateInstance.similiarityCalculate({
-            kodeKasus: kodeKasus
+        let result = await calculateInstance.similiarityCalculate({
+            kodeKasus: data.kodeKasus
         })
         res.json({
             'status': 'success',
@@ -73,6 +73,59 @@ app.post('/v1/calculate/similiarity', async (req, res) => {
         })
     }
 })
+
+app.post('/solusi/v1/detail', async(req, res) => {
+    const {data} = req.body;
+    try {
+        let result = await solusiInstance.getDetail({
+            kode: data.kode
+        });
+        res.json({
+            'status': 'success',
+            'data': result
+        })
+    } catch (error) {
+        res.status(409).json({
+            error: error
+        })
+    }
+})
+
+app.post('/penyakit/v1/detail', async(req, res) => {
+    const {data} = req.body;
+    try {
+        let result = await penyakitInstance.getDetail({
+            kode: data.kode
+        });
+        res.json({
+            'status': 'success',
+            'data': result
+        })
+    } catch (error) {
+        res.status(409).json({
+            error: error
+        })
+    }
+})
+
+app.post('/gejala/v1/detail', async(req, res) => {
+    const {data} = req.body;
+    try {
+        let result = await gejalaInstance.getDetail({
+            kode: data.kode
+        });
+        res.json({
+            'status': 'success',
+            'data': result
+        })
+    } catch (error) {
+        res.status(409).json({
+            error: error
+        })
+    }
+})
+
+
 
 let port = 9999;
 app.listen(port, () => {

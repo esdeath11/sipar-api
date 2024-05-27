@@ -12,6 +12,18 @@ class Penyakit {
         });
         return db;
     }
+
+    async getDetail({kode}){
+        let db = await sqliteHelper.getData({
+            column: [
+                'KODE',
+                'PENYAKIT'
+            ],
+            table: 'T_PENYAKIT',
+            condition: `WHERE KODE = '${kode}'`
+        });
+        return db;
+    }
 }
 
 const penyakitInstance = new Penyakit();

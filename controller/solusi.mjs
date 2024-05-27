@@ -19,6 +19,23 @@ class Solusi {
         return db;
     }
 
+    async getDetail({kode}){
+        let db = await sqliteHelper.getData({
+            column: [
+                'KODE_SOLUSI', 
+                'KODE_PENYAKIT', 
+                'KODE_GEJALA', 
+                'BOBOT_PENYAKIT', 
+                'BOBOT_TOTAL',
+                'SOLUSI'
+            ],
+            table: 'T_SOLUSI',
+            condition: `WHERE KODE_SOLUSI = '${kode}'`
+        });
+        
+        return db;
+    }
+
 }
 
 const solusiInstance = new Solusi();
