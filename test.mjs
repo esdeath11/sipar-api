@@ -46,9 +46,9 @@ import getDataDBInstance from "./data/get_data_db.mjs";
 
 
 // console.log(b);
-let kasus = ['G01','G11', 'G15', 'G02'];
-let result = await calculateInstance.similiarityCalculate({kodeKasus: kasus});
-console.log(result);
+// let kasus = ['G01','G11', 'G15', 'G02'];
+// let result = await calculateInstance.similiarityCalculate({kodeKasus: kasus});
+// console.log(result);
 // console.log(Object.values(kasus));
 // let listSolusi = await solusiInstance.getAll();
 // // console.log(listSolusi);
@@ -80,3 +80,9 @@ console.log(result);
 // console.log(listSolusi[0].KODE_GEJALA.split(', '));
 
 // let cal = calculateInstance.calculateTotal()
+
+
+// let result = solusiInstance.inputNewSolusi({
+//     penyakit: "",
+//     gejala: ["Daun Menguning", "Daun Keriting"]
+// });

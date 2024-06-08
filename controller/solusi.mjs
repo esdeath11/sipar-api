@@ -1,5 +1,6 @@
 import getDataDBInstance from "../data/get_data_db.mjs";
 import sqliteHelper from "../helper/sqlite3_helper.mjs";
+import gejalaInstance from "./gejala.mjs";
 
 class Solusi {
     async getAll(){
@@ -35,6 +36,16 @@ class Solusi {
         
         return db;
     }
+
+    // async inputNewSolusi({kodePenyakit, kodeGejala}){
+    //     let dataGejala = await gejalaInstance.getAll();
+    //     let bobot = [];
+    //     for (let i = 0; i < dataGejala.length; i++) {
+            
+            
+    //     }
+
+    // }
 
 }
 
