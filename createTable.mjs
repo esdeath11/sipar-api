@@ -40,7 +40,7 @@ const db = new sqlite3.Database('./mydatabase.db');
 //   }
 // });
 
-let query = `ALTER TABLE T_GEJALA ADD COLUMN IMAGE_PATH TEXT`
+let query = `ALTER TABLE T_PENYAKIT ADD COLUMN IMAGE_PATH TEXT`
 let data;
 db.all(query, (err, rows) => {
     console.log(rows);
