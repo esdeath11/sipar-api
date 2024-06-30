@@ -62,7 +62,7 @@ class Calculate {
         let adjustValue = originalValue.map(value => (value / totalSum) * 100);
         let fixedAdjust = adjustValue.map(value => value.toFixed(2));
         for (let x = 0; x < hasil.length; x++) {
-            hasil[x].score = fixedAdjust[x]
+            hasil[x].score = parseFloat(fixedAdjust[x]);
         }
 
         return hasil
