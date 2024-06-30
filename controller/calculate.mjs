@@ -50,22 +50,22 @@ class Calculate {
             
         }
         a.sort((c, b) => b.score - c.score)
-        // return a.slice(0, 3);
+        return a.slice(0, 3);
 
         // update
-        let hasil = a.slice(0, 3);
-        let originalValue = [];
-        for (let m = 0; m < hasil.length; m++) {
-            originalValue.push(hasil[m].score);
-        }
-        let totalSum = originalValue.reduce((sum, value) => sum + value, 0);
-        let adjustValue = originalValue.map(value => (value / totalSum) * 100);
-        let fixedAdjust = adjustValue.map(value => value.toFixed(2));
-        for (let x = 0; x < hasil.length; x++) {
-            hasil[x].score = parseFloat(fixedAdjust[x]);
-        }
+        // let hasil = a.slice(0, 3);
+        // let originalValue = [];
+        // for (let m = 0; m < hasil.length; m++) {
+        //     originalValue.push(hasil[m].score);
+        // }
+        // let totalSum = originalValue.reduce((sum, value) => sum + value, 0);
+        // let adjustValue = originalValue.map(value => (value / totalSum) * 100);
+        // let fixedAdjust = adjustValue.map(value => value.toFixed(2));
+        // for (let x = 0; x < hasil.length; x++) {
+        //     hasil[x].score = parseFloat(fixedAdjust[x]);
+        // }
 
-        return hasil
+        // return hasil
     }
 
 }
