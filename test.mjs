@@ -46,10 +46,13 @@ import getDataDBInstance from "./data/get_data_db.mjs";
 
 
 // console.log(b);
-// let kasus = ['G01','G11', 'G15', 'G02'];
-// let result = await calculateInstance.similiarityCalculate({kodeKasus: kasus});
-// console.log(result);
-// console.log(Object.values(kasus));
+let kasus = ['G13', 'G14', 'G17'];
+let result = await calculateInstance.similiarityCalculate({kodeKasus: kasus});
+console.log(result);
+console.log(Object.values(kasus));
+
+
+
 // let listSolusi = await solusiInstance.getAll();
 // // console.log(listSolusi);
 // let dataKemiripan = await similarityInstance.getKemiripanGejala({
