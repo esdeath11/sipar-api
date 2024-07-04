@@ -4,6 +4,7 @@ import calculateInstance from "./controller/calculate.mjs";
 import similarityInstance from "./controller/similiarity.mjs";
 import solusiInstance from "./controller/solusi.mjs";
 import getDataDBInstance from "./data/get_data_db.mjs";
+import sqliteHelper from "./helper/sqlite3_helper.mjs";
 
 
 // let data = await sqliteHelper.getData({
@@ -46,10 +47,10 @@ import getDataDBInstance from "./data/get_data_db.mjs";
 
 
 // console.log(b);
-let kasus = ['G13', 'G14', 'G17'];
-let result = await calculateInstance.similiarityCalculate({kodeKasus: kasus});
-console.log(result);
-console.log(Object.values(kasus));
+// let kasus = ['G13', 'G14', 'G17'];
+// let result = await calculateInstance.similiarityCalculate({kodeKasus: kasus});
+// console.log(result);
+// console.log(Object.values(kasus));
 
 
 
@@ -89,3 +90,11 @@ console.log(Object.values(kasus));
 //     penyakit: "",
 //     gejala: ["Daun Menguning", "Daun Keriting"]
 // });
+
+let data = await sqliteHelper.getData({
+    table: 'T_GEJALA',
+    column: ['KODE'],
+    condition: 'ORDER BY CAST(SUBSTR(KODE, 2) AS INTEGER) DESC;'
+})
+let kode = parseInt(data[0].KODE.slice(1)) + 1;
+console.log(kode);

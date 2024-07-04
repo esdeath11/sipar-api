@@ -12,6 +12,7 @@ import {
     fileURLToPath
 } from 'url';
 import sqliteHelper from './helper/sqlite3_helper.mjs';
+import uploadRevise from './controller/upload_revise.mjs';
 const __filename = fileURLToPath(
     import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -211,7 +212,9 @@ app.get('/image/gejala/:kode', async (req, res) => {
         res.set('Content-Type', 'image/jpeg');
         res.status(200).send(image[0].IMAGE);
     } catch (error) {
-        res.status(409).json({ error: 'Failed to fetch image' });
+        res.status(409).json({
+            error: 'Failed to fetch image'
+        });
     }
 })
 
@@ -249,7 +252,7 @@ app.get('/image/penyakit/:kode', async (req, res) => {
         const image = await sqliteHelper.getData({
             column: ['IMAGE'],
             table: 'T_IMAGE_PENYAKIT',
-            condition: `WHERE KODE_PENYAKIT = '${kode}'`
+            condition: `WHERE KODE_PENYAKIT = '${kode}' ORDER BY ID`
         });
         console.log(image);
         if (!image) {
@@ -260,7 +263,9 @@ app.get('/image/penyakit/:kode', async (req, res) => {
         res.set('Content-Type', 'image/jpeg');
         res.status(200).send(image[0].IMAGE);
     } catch (error) {
-        res.status(409).json({ error: 'Failed to fetch image' });
+        res.status(409).json({
+            error: 'Failed to fetch image'
+        });
     }
 })
 
@@ -280,9 +285,13 @@ app.delete('/image/penyakit/:kode', async (req, res) => {
                 error: 'Image not found'
             });
         }
-        res.status(200).json({ message: 'Image deleted successfully' });
+        res.status(200).json({
+            message: 'Image deleted successfully'
+        });
     } catch (error) {
-        res.status(409).json({ error: 'Failed to delete image' });
+        res.status(409).json({
+            error: 'Failed to delete image'
+        });
     }
 })
 
@@ -302,12 +311,168 @@ app.delete('/image/gejala/:kode', async (req, res) => {
                 error: 'Image not found'
             });
         }
-        res.status(200).json({ message: 'Image deleted successfully' });
+        res.status(200).json({
+            message: 'Image deleted successfully'
+        });
     } catch (error) {
-        res.status(409).json({ error: 'Failed to delete image' });
+        res.status(409).json({
+            error: 'Failed to delete image'
+        });
     }
 })
 
+app.put('/update/image/:type/:prefix', upload.single('image'), async (req, res) => {
+    const {
+        type, prefix
+    } = req.params;
+    const{
+        buffer: image
+    } = req.file
+    const {
+        kode
+    } = req.body;
+    try {
+        await sqliteHelper.updateData({
+            table: `T_${type}`,
+            column: ['IMAGE'],
+            values: [image],
+            condition: `WHERE KODE_${prefix} = '${kode}'`
+        })
+        res.status(200).json({
+            message: 'update image successfully'
+        });
+    } catch (error) {
+        console.error('Failed to update image:', error);
+        res.status(409).json({
+            error: 'Failed to update image'
+        });
+    }
+})
+
+
+app.post('/revise/data/gejala', async (req, res) => {
+    const {data} = req.body;
+    try {
+        let dataDB = await uploadRevise.reviseGejala({
+            gejala: data.gejala,
+            bobot: data.bobot
+        })
+        if(dataDB == 'DUPLICATE DATA'){
+            res.status(409).json({
+                error: 'DUPLICATE DATA'
+            })
+        }
+        res.status(200).json({
+            message: 'add data successfully'
+        });
+    } catch (error) {
+        console.error('Failed to update data:', error);
+        res.status(409).json({
+            error: 'Failed to add data'
+        });
+    }
+})
+
+app.post('/revise/data/penyakit', async (req, res) => {
+    const {data} = req.body;
+    try {
+        await uploadRevise.revisePenyakit({
+            penyakit: data.penyakit
+        })
+        res.status(200).json({
+            message: 'update data successfully'
+        });
+    } catch (error) {
+        console.error('Failed to update data:', error);
+        res.status(409).json({
+            error: 'Failed to update data'
+        });
+    }
+})
+
+app.post('/revise/data/solusi', async (req, res) => {
+    const {data} = req.body;
+    try {
+        await uploadRevise.reviseSolusi({
+            kode_penyakit: data.kode_penyakit,
+            kode_gejala: data.kode_gejala,
+            bobot_penyakit: data.bobot_gejala,
+            bobot_total: data.bobot_total,
+            solusi: data.solusi
+        })
+        res.status(200).json({
+            message: 'update data successfully'
+        });
+    } catch (error) {
+        console.error('Failed to update data:', error);
+        res.status(409).json({
+            error: 'Failed to update data'
+        });
+    }
+})
+
+app.put('/update/data/:type', async (req, res) => {
+    const {data} = req.body;
+    const {type} = req.params;
+    try {
+        if(type == 'SOLUSI'){
+            await sqliteHelper.updateData({
+                table: `T_${type}`,
+                column: data.column,
+                values: data.values,
+                condition: `WHERE KODE_SOLUSI = '${data.kode}'`
+            })
+        } else {
+            await sqliteHelper.updateData({
+                table: `T_${type}`,
+                column: data.column,
+                values: data.values,
+                condition: `WHERE KODE = '${data.kode}'`
+            })
+        }
+        
+        res.status(200).json({
+            message: 'update data successfully'
+        });
+    } catch (error) {
+        console.error('Failed to update data:', error);
+        res.status(409).json({
+            error: 'Failed to update data'
+        });
+    }
+})
+
+app.delete('/delete/data/:type/:kode', async (req, res) => {
+    const {type, kode} = req.params
+    let data;
+    try {
+        if(type == 'SOLUSI'){
+            data = await sqliteHelper.deleteData({
+                table: `T_${type}`,
+                kode: kode,
+                column: 'KODE_SOLUSI'
+            })
+        } else {
+            data = await sqliteHelper.deleteData({
+                table: `T_${type}`,
+                kode: kode,
+                column: 'KODE'
+            })
+        }
+        if (data === 'Rows deleted: 0') {
+            return res.status(404).json({
+                error: 'data not found'
+            });
+        }
+        res.status(200).json({
+            message: 'data deleted successfully'
+        });
+    } catch (error) {
+        res.status(200).json({
+            error: 'Failed to delete data'
+        });
+    }
+})
 
 
 

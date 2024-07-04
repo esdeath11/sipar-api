@@ -32,7 +32,7 @@ class SqliteHelper {
         console.log(joinColumn);
         const placeholders = values.map(() => '?').join(', '); // Create placeholders for values
         const query = `INSERT INTO ${table} (${joinColumn}) VALUES (${placeholders})`;
-
+        console.log(query);
         return new Promise((resolve, reject) => {
             const db = new sqlite3.Database('mydatabase.db', (err) => {
                 if (err) {
@@ -62,7 +62,7 @@ class SqliteHelper {
         let query = `DELETE FROM ${table} WHERE ${column} = ?`;
         console.log(query);
         return new Promise((resolve, reject) => {
-            
+
             const db = new sqlite3.Database('mydatabase.db');
             db.run(query, [kode], function (err) {
                 if (err) {
@@ -75,6 +75,34 @@ class SqliteHelper {
                 db.close(); // Close the database connection
             });
         });
+    }
+
+    async updateData({
+        table,
+        column = [],
+        values = [],
+        condition
+    }) {
+        let joinColumn = ''
+        for (let i = 0; i < column.length; i++) {
+            joinColumn += `${column[i]} = ?, `
+        }
+        joinColumn = joinColumn.slice(0, -2);
+        let query = `UPDATE ${table} SET ${joinColumn} ${condition}`
+        console.log(query);
+        return new Promise((resolve, reject) => {
+            const db = new sqlite3.Database('mydatabase.db');
+            db.run(query, values, function (err) {
+                if (err) {
+                    console.error('Error updating data:', err.message);
+                    reject(err);
+                } else {
+                    console.log(`Rows updated: ${this.changes}`);
+                    resolve(`Rows updated: ${this.changes}`);
+                }
+                db.close()
+            })
+        })
     }
 }
 
