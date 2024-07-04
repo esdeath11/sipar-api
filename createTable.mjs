@@ -40,7 +40,11 @@ const db = new sqlite3.Database('./mydatabase.db');
 //   }
 // });
 
-let query = `ALTER TABLE T_PENYAKIT ADD COLUMN IMAGE_PATH TEXT`
+let query = `CREATE TABLE IF NOT EXISTS T_IMAGE_PENYAKIT (
+      ID INTEGER PRIMARY KEY AUTOINCREMENT,
+      KODE_PENYAKIT TEXT NOT NULL,
+      IMAGE BLOB NOT NULL
+    )`
 let data;
 db.all(query, (err, rows) => {
     console.log(rows);
