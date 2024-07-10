@@ -92,9 +92,10 @@ import sqliteHelper from "./helper/sqlite3_helper.mjs";
 // });
 
 let data = await sqliteHelper.getData({
-    table: 'T_GEJALA',
-    column: ['KODE'],
-    condition: 'ORDER BY CAST(SUBSTR(KODE, 2) AS INTEGER) DESC;'
+    table: 'T_SOLUSI',
+    column: ['KODE_SOLUSI', 'KODE_PENYAKIT', 'KODE_GEJALA', 'BOBOT_PENYAKIT','SOLUSI'],
+    condition: 'ORDER BY CAST(SUBSTR(KODE_SOLUSI, 2) AS INTEGER) DESC;'
 })
-let kode = parseInt(data[0].KODE.slice(1)) + 1;
-console.log(kode);
+// let kode = parseInt(data[0].KODE.slice(1)) + 1;
+
+console.log(data[0]);

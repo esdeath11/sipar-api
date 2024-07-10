@@ -362,7 +362,13 @@ app.post('/revise/data/gejala', async (req, res) => {
                 error: 'DUPLICATE DATA'
             })
         }
+        let result = await sqliteHelper.getData({
+            table: 'T_GEJALA',
+            column: ['KODE', 'GEJALA'],
+            condition: 'ORDER BY CAST(SUBSTR(KODE, 2) AS INTEGER) DESC;'
+        })
         res.status(200).json({
+            data: result[0],
             message: 'add data successfully'
         });
     } catch (error) {
@@ -379,7 +385,13 @@ app.post('/revise/data/penyakit', async (req, res) => {
         await uploadRevise.revisePenyakit({
             penyakit: data.penyakit
         })
+        let result = await sqliteHelper.getData({
+            table: 'T_PENYAKIT',
+            column: ['KODE', 'PENYAKIT'],
+            condition: 'ORDER BY CAST(SUBSTR(KODE, 2) AS INTEGER) DESC;'
+        })
         res.status(200).json({
+            data: result[0],
             message: 'update data successfully'
         });
     } catch (error) {
@@ -400,7 +412,13 @@ app.post('/revise/data/solusi', async (req, res) => {
             bobot_total: data.bobot_total,
             solusi: data.solusi
         })
+        let result = await sqliteHelper.getData({
+            table: 'T_SOLUSI',
+            column: ['KODE_SOLUSI', 'KODE_PENYAKIT', 'KODE_GEJALA', 'BOBOT_PENYAKIT','SOLUSI'],
+            condition: 'ORDER BY CAST(SUBSTR(KODE_SOLUSI, 2) AS INTEGER) DESC;'
+        })
         res.status(200).json({
+            data: result[0],
             message: 'update data successfully'
         });
     } catch (error) {
