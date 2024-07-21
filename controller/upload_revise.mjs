@@ -50,16 +50,53 @@ class UploadRevise {
     async reviseSolusi({kode_penyakit, kode_gejala = [], bobot_penyakit, bobot_total, solusi}){
         let data = await sqliteHelper.getData({
             table: 'T_SOLUSI',
-            column: ['KODE_SOLUSI'],
+            column: ['KODE_SOLUSI', 'KODE_GEJALA'],
             condition: 'ORDER BY CAST(SUBSTR(KODE_SOLUSI, 2) AS INTEGER) DESC'
         })
         let kode = parseInt(data[0].KODE_SOLUSI.slice(1)) < 9 ? `S0${parseInt(data[0].KODE_SOLUSI.slice(1)) + 1}` : `S${parseInt(data[0].KODE_SOLUSI.slice(1)) + 1}`
         // values.push(kode);
-        await sqliteHelper.insertData({
-            table: 'T_SOLUSI',
-            columns: ['KODE_SOLUSI', 'KODE_PENYAKIT', 'KODE_GEJALA', 'BOBOT_PENYAKIT', 'BOBOT_TOTAL', 'SOLUSI'],
-            values: [kode, kode_penyakit, kode_gejala, bobot_penyakit, bobot_total, solusi]
+        console.log(data);
+        let result;
+        let status = false
+        let kodeSolusi;
+        data.map(item => {
+            if(item.KODE_GEJALA == kode_gejala){
+                status = true
+                kodeSolusi = item.KODE_SOLUSI
+            }
         })
+
+        if(status){
+            await sqliteHelper.updateData({
+                table: 'T_SOLUSI',
+                column: ['SOLUSI'],
+                values: [solusi],
+                condition: `WHERE KODE_SOLUSI = '${kodeSolusi}'`
+            })
+            result = await sqliteHelper.getData({
+                table: 'T_SOLUSI',
+                column: ['KODE_SOLUSI', 'KODE_PENYAKIT', 'KODE_GEJALA', 'BOBOT_PENYAKIT','SOLUSI'],
+                condition: `WHERE KODE_SOLUSI = '${kodeSolusi}'`
+            })
+        } else {
+            await sqliteHelper.insertData({
+                table: 'T_SOLUSI',
+                columns: ['KODE_SOLUSI', 'KODE_PENYAKIT', 'KODE_GEJALA', 'BOBOT_PENYAKIT', 'BOBOT_TOTAL', 'SOLUSI'],
+                values: [kode, kode_penyakit, kode_gejala, bobot_penyakit, bobot_total, solusi]
+            })
+            result = await sqliteHelper.getData({
+                table: 'T_SOLUSI',
+                column: ['KODE_SOLUSI', 'KODE_PENYAKIT', 'KODE_GEJALA', 'BOBOT_PENYAKIT','SOLUSI'],
+                condition: 'ORDER BY CAST(SUBSTR(KODE_SOLUSI, 2) AS INTEGER) DESC;'
+            })
+        }
+        
+
+        
+        return result;
+        
+
+        
     }
 }
 

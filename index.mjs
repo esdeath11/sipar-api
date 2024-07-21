@@ -99,6 +99,7 @@ app.post('/v1/calculate/similiarity', async (req, res) => {
         let result = await calculateInstance.similiarityCalculate({
             kodeKasus: data.kodeKasus
         })
+        console.log('checkResult', result);
         res.json({
             'status': 'success',
             'data': result
@@ -405,18 +406,14 @@ app.post('/revise/data/penyakit', async (req, res) => {
 app.post('/revise/data/solusi', async (req, res) => {
     const {data} = req.body;
     try {
-        await uploadRevise.reviseSolusi({
+        let result = await uploadRevise.reviseSolusi({
             kode_penyakit: data.kode_penyakit,
-            kode_gejala: data.kode_gejala,
+            kode_gejala: data.kode_gejala.replace(/,([^ ])/g, ', $1'),
             bobot_penyakit: data.bobot_gejala,
             bobot_total: data.bobot_total,
             solusi: data.solusi
         })
-        let result = await sqliteHelper.getData({
-            table: 'T_SOLUSI',
-            column: ['KODE_SOLUSI', 'KODE_PENYAKIT', 'KODE_GEJALA', 'BOBOT_PENYAKIT','SOLUSI'],
-            condition: 'ORDER BY CAST(SUBSTR(KODE_SOLUSI, 2) AS INTEGER) DESC;'
-        })
+        
         res.status(200).json({
             data: result[0],
             message: 'update data successfully'

@@ -28,44 +28,40 @@ class Calculate {
 
 
     async similiarityCalculate({kodeKasus}){
+        try {
         let a = [];
+        
         let listSolusi = await solusiInstance.getAll();
+        // console.log('im here', listSolusi)
         let dataKemiripan = await similarityInstance.getKemiripanGejala({
             requestKodeGejala: kodeKasus
         });
+        // console.log('im here 2', dataKemiripan)
         for (let i = 0; i < listSolusi.length; i++) {
             let result = this.calculateWeightedAverage({
                 scores: dataKemiripan[i].sBobot,
                 weights: listSolusi[i].BOBOT_PENYAKIT.split(', '),
                 factors: listSolusi[i].BOBOT_PENYAKIT.split(', ')
             })
+            // console.log('im here 3', result)
             // console.log(result * 100);
             let value = result * 100;
             let obj = {
                 kode_solusi: dataKemiripan[i].kode,
                 score: Number(value.toFixed(2))
             }
-            
+            console.log('im here 4', obj)
             a.push(obj);
             
         }
+        console.log('im here 5', a)
         a.sort((c, b) => b.score - c.score)
+        
         return a.slice(0, 3);
+        } catch (error) {
+            throw new Error(error);
+        }
 
-        // update
-        // let hasil = a.slice(0, 3);
-        // let originalValue = [];
-        // for (let m = 0; m < hasil.length; m++) {
-        //     originalValue.push(hasil[m].score);
-        // }
-        // let totalSum = originalValue.reduce((sum, value) => sum + value, 0);
-        // let adjustValue = originalValue.map(value => (value / totalSum) * 100);
-        // let fixedAdjust = adjustValue.map(value => value.toFixed(2));
-        // for (let x = 0; x < hasil.length; x++) {
-        //     hasil[x].score = parseFloat(fixedAdjust[x]);
-        // }
-
-        // return hasil
     }
 
 }

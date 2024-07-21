@@ -47,9 +47,9 @@ import sqliteHelper from "./helper/sqlite3_helper.mjs";
 
 
 // console.log(b);
-// let kasus = ['G13', 'G14', 'G17'];
-// let result = await calculateInstance.similiarityCalculate({kodeKasus: kasus});
-// console.log(result);
+let kasus = ['G13', 'G14', 'G17'];
+let result = await calculateInstance.similiarityCalculate({kodeKasus: kasus});
+console.log(result);
 // console.log(Object.values(kasus));
 
 
