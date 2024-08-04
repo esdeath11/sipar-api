@@ -333,18 +333,41 @@ app.put('/update/image/:type/:prefix', upload.single('image'), async (req, res) 
         kode
     } = req.body;
     try {
-        await sqliteHelper.updateData({
+        let check = await sqliteHelper.getData({
+            column: [`KODE_${prefix}`,'IMAGE'],
             table: `T_${type}`,
-            column: ['IMAGE'],
-            values: [image],
-            condition: `WHERE KODE_${prefix} = '${kode}'`
+            condition: `WHERE KODE_${prefix} = '${kode}'`           
         })
-        res.status(200).json({
-            message: 'update image successfully'
-        });
+
+        if (check.length < 1) {
+            await sqliteHelper.insertData({
+                columns: [`KODE_${prefix}`,'IMAGE'],
+                table: `T_${type}`,
+                values: [kode, image]
+            })
+            res.status(200).json({
+                code: 'IMG-001-001',
+                message: 'image not found, added image successfully'
+            });
+        } else {
+            await sqliteHelper.updateData({
+                table: `T_${type}`,
+                column: ['IMAGE'],
+                values: [image],
+                condition: `WHERE KODE_${prefix} = '${kode}'`
+            })
+            res.status(200).json({
+                code: 'IMG-001-002',
+                message: 'update image successfully'
+            });
+        }
+
+        
+        
     } catch (error) {
         console.error('Failed to update image:', error);
         res.status(409).json({
+            code: 'IMG-001-003',
             error: 'Failed to update image'
         });
     }
