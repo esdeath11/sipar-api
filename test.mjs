@@ -47,9 +47,9 @@ import sqliteHelper from "./helper/sqlite3_helper.mjs";
 
 
 // console.log(b);
-let kasus = ['G13', 'G14', 'G17'];
-let result = await calculateInstance.similiarityCalculate({kodeKasus: kasus});
-console.log(result);
+// let kasus = ['G13', 'G14', 'G17'];
+// let result = await calculateInstance.similiarityCalculate({kodeKasus: kasus});
+// console.log(result);
 // console.log(Object.values(kasus));
 
 
@@ -91,11 +91,26 @@ console.log(result);
 //     gejala: ["Daun Menguning", "Daun Keriting"]
 // });
 
-let data = await sqliteHelper.getData({
-    table: 'T_SOLUSI',
-    column: ['KODE_SOLUSI', 'KODE_PENYAKIT', 'KODE_GEJALA', 'BOBOT_PENYAKIT','SOLUSI'],
-    condition: 'ORDER BY CAST(SUBSTR(KODE_SOLUSI, 2) AS INTEGER) DESC;'
-})
+// let data = await sqliteHelper.getData({
+//     table: 'T_SOLUSI',
+//     column: ['KODE_SOLUSI', 'KODE_PENYAKIT', 'KODE_GEJALA', 'BOBOT_PENYAKIT','SOLUSI'],
+//     condition: 'ORDER BY CAST(SUBSTR(KODE_SOLUSI, 2) AS INTEGER) DESC;'
+// })
 // let kode = parseInt(data[0].KODE.slice(1)) + 1;
 
-console.log(data[0]);
+// console.log(data[0]);
+
+let check = await sqliteHelper.getData({
+    column: [`KODE_GEJALA`,'IMAGE'],
+    table: `T_IMAGE_GEJALA`,
+    condition: `WHERE KODE_GEJALA = 'G01'`           
+})
+
+
+if (check.length < 1) {
+    console.log(check.length)
+} else {
+    console.log('data')
+}
+
+console.log(check);
