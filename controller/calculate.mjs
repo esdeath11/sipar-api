@@ -32,18 +32,18 @@ class Calculate {
         let a = [];
         
         let listSolusi = await solusiInstance.getAll();
-        // console.log('im here', listSolusi)
+        console.log('im listSolusi', listSolusi)
         let dataKemiripan = await similarityInstance.getKemiripanGejala({
             requestKodeGejala: kodeKasus
         });
-        // console.log('im here 2', dataKemiripan)
+        console.log('im dataKemiripan', dataKemiripan)
         for (let i = 0; i < listSolusi.length; i++) {
             let result = this.calculateWeightedAverage({
                 scores: dataKemiripan[i].sBobot,
                 weights: listSolusi[i].BOBOT_PENYAKIT.split(', '),
                 factors: listSolusi[i].BOBOT_PENYAKIT.split(', ')
             })
-            // console.log('im here 3', result)
+            console.log('im result', result)
             // console.log(result * 100);
             let value = result * 100;
             let obj = {
